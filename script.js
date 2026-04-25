@@ -1,72 +1,51 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
+    const formContainer = document.getElementById('formContainer');
     const successMsg = document.getElementById('successMessage');
-    const emailInput = document.getElementById('userEmail');
 
-    // 1. Подія 'input' — Валідація Email в реальному часі
-    emailInput.addEventListener('input', () => {
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const emailError = document.getElementById('emailError');
-        
-        if (emailInput.value !== "" && !emailPattern.test(emailInput.value)) {
-            emailError.textContent = "Невірний формат email (приклад: name@mail.com)";
-            emailInput.style.borderColor = "#e74c3c";
-        } else {
-            emailError.textContent = "";
-            emailInput.style.borderColor = "#ddd";
-        }
-    });
-
-    // 2. Подія 'submit' — Обробка відправки форми
     form.addEventListener('submit', function(event) {
-        event.preventDefault(); // Сторінка не перезавантажується
+        // 1. Зупиняємо стандартне перезавантаження сторінки
+        event.preventDefault();
 
-        const name = document.getElementById('userName').value.trim();
-        const email = emailInput.value.trim();
-        const message = document.getElementById('userMessage').value.trim();
+        // 2. Отримуємо значення та очищуємо від пробілів
+        const nameInput = document.getElementById('userName');
+        const emailInput = document.getElementById('userEmail');
+        const messageInput = document.getElementById('userMessage');
 
         // Очищення попередніх помилок
-        document.querySelectorAll('.error').forEach(el => el.textContent = '');
-
+        document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
+        
         let isValid = true;
 
-        // Валідація полів
-        if (name === "") {
+        // 3. Базова валідація (чи заповнені поля)
+        if (nameInput.value.trim() === "") {
             document.getElementById('nameError').textContent = "Введіть ваше ім'я";
             isValid = false;
         }
-        if (email === "") {
-            document.getElementById('emailError').textContent = "Email обов'язковий";
-            isValid = false;
-        }
-        if (message === "") {
-            document.getElementById('messageError').textContent = "Напишіть нам щось";
+
+        // Проста перевірка Email на наявність @
+        if (emailInput.value.trim() === "" || !emailInput.value.includes('@')) {
+            document.getElementById('emailError').textContent = "Введіть коректний Email";
             isValid = false;
         }
 
-        // Якщо все заповнено вірно
+        if (messageInput.value.trim() === "") {
+            document.getElementById('messageError').textContent = "Напишіть нам повідомлення";
+            isValid = false;
+        }
+
+        // 4. ГОРОВНА ЛОГІКА: Якщо все заповнено вірно
         if (isValid) {
-            // ПРИХОВУЄМО ФОРМУ
-            form.classList.add('hidden');
+            // ПРИХОВУЄМО КОНТЕЙНЕР З ФОРМОЮ
+            formContainer.classList.add('hidden');
             
-            // ПОКАЗУЄМО ПОВІДОМЛЕННЯ ПРО УСПІХ
+            // ПОКАЗУЄМО БЛОК ПОДЯКИ (видаляємо клас приховування)
             successMsg.classList.remove('hidden');
 
-            console.log("Форма успішно оброблена:", { name, email, message });
+            // Опціонально: вивід у консоль
+            console.log("Повідомлення надіслано успішно!");
         }
     });
-
-    // 3. Подія 'click' — Інтерактивність кнопок товарів
-    const buyBtn = document.querySelector('.buy-btn');
-    if (buyBtn) {
-        buyBtn.addEventListener('click', () => {
-            buyBtn.textContent = "У кошику ✓";
-            buyBtn.style.background = "#2ecc71";
-            buyBtn.style.color = "white";
-            
-            alert("Товар додано до вашого кошика!");
-        });
-    }
 });
             
             setTimeout(() => notification.remove(), 2000);
