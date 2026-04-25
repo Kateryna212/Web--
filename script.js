@@ -4,46 +4,42 @@ document.addEventListener('DOMContentLoaded', () => {
     const successMsg = document.getElementById('successMessage');
 
     form.addEventListener('submit', function(event) {
-        // 1. Зупиняємо стандартне перезавантаження сторінки
+        // 1. Зупиняємо перезавантаження сторінки
         event.preventDefault();
 
-        // 2. Отримуємо значення та очищуємо від пробілів
-        const nameInput = document.getElementById('userName');
-        const emailInput = document.getElementById('userEmail');
-        const messageInput = document.getElementById('userMessage');
+        // 2. Отримуємо дані
+        const name = document.getElementById('userName').value.trim();
+        const email = document.getElementById('userEmail').value.trim();
+        const message = document.getElementById('userMessage').value.trim();
 
-        // Очищення попередніх помилок
+        // Очищення помилок
         document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
-        
+
         let isValid = true;
 
-        // 3. Базова валідація (чи заповнені поля)
-        if (nameInput.value.trim() === "") {
-            document.getElementById('nameError').textContent = "Введіть ваше ім'я";
+        // 3. Валідація
+        if (name === "") {
+            document.getElementById('nameError').textContent = "Введіть ім'я";
             isValid = false;
         }
-
-        // Проста перевірка Email на наявність @
-        if (emailInput.value.trim() === "" || !emailInput.value.includes('@')) {
+        if (!email.includes('@')) {
             document.getElementById('emailError').textContent = "Введіть коректний Email";
             isValid = false;
         }
-
-        if (messageInput.value.trim() === "") {
-            document.getElementById('messageError').textContent = "Напишіть нам повідомлення";
+        if (message === "") {
+            document.getElementById('messageError').textContent = "Напишіть повідомлення";
             isValid = false;
         }
 
-        // 4. ГОРОВНА ЛОГІКА: Якщо все заповнено вірно
+        // 4. ДІЯ ПРИ УСПІХУ
         if (isValid) {
-            // ПРИХОВУЄМО КОНТЕЙНЕР З ФОРМОЮ
-            formContainer.classList.add('hidden');
+            // Повністю ховаємо контейнер з формою
+            formContainer.style.display = 'none';
             
-            // ПОКАЗУЄМО БЛОК ПОДЯКИ (видаляємо клас приховування)
+            // Показуємо блок подяки (видаляємо hidden)
             successMsg.classList.remove('hidden');
-
-            // Опціонально: вивід у консоль
-            console.log("Повідомлення надіслано успішно!");
+            
+            console.log("Форма успішно відправлена!");
         }
     });
 });
