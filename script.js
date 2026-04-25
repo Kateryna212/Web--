@@ -1,45 +1,36 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
-    const formContainer = document.getElementById('formContainer');
-    const successMsg = document.getElementById('successMessage');
+    const mainCard = document.getElementById('mainCard');
 
     form.addEventListener('submit', function(event) {
-        // 1. Зупиняємо перезавантаження сторінки
-        event.preventDefault();
+        event.preventDefault(); // Зупиняємо стандартну відправку
 
-        // 2. Отримуємо дані
+        // Отримуємо дані
         const name = document.getElementById('userName').value.trim();
         const email = document.getElementById('userEmail').value.trim();
         const message = document.getElementById('userMessage').value.trim();
 
-        // Очищення помилок
-        document.querySelectorAll('.error-text').forEach(el => el.textContent = '');
-
+        // Валідація
         let isValid = true;
+        if (name === "") { document.getElementById('nameError').textContent = "Введіть ім'я"; isValid = false; }
+        if (!email.includes('@')) { document.getElementById('emailError').textContent = "Невірний Email"; isValid = false; }
+        if (message === "") { document.getElementById('messageError').textContent = "Введіть повідомлення"; isValid = false; }
 
-        // 3. Валідація
-        if (name === "") {
-            document.getElementById('nameError').textContent = "Введіть ім'я";
-            isValid = false;
-        }
-        if (!email.includes('@')) {
-            document.getElementById('emailError').textContent = "Введіть коректний Email";
-            isValid = false;
-        }
-        if (message === "") {
-            document.getElementById('messageError').textContent = "Напишіть повідомлення";
-            isValid = false;
-        }
-
-        // 4. ДІЯ ПРИ УСПІХУ
         if (isValid) {
-            // Повністю ховаємо контейнер з формою
-            formContainer.style.display = 'none';
-            
-            // Показуємо блок подяки (видаляємо hidden)
-            successMsg.classList.remove('hidden');
-            
-            console.log("Форма успішно відправлена!");
+            // 1. Змінюємо текст на кнопці, імітуючи відправку
+            const btn = document.getElementById('submitBtn');
+            btn.textContent = "Надсилаємо...";
+            btn.disabled = true;
+
+            // 2. Через 1 секунду "оновлюємо" вміст картки
+            setTimeout(() => {
+                mainCard.innerHTML = `
+                    <div class="thanks-message">
+                        <h2>Дякую!</h2>
+                        <p>Ваше повідомлення надіслано успішно.</p>
+                    </div>
+                `;
+            }, 1000);
         }
     });
 });
