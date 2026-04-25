@@ -1,0 +1,21 @@
+<section class="contact-section">
+    <h2>Зворотний зв'язок</h2>
+    <form id="contactForm">
+        <div class="form-group">
+            <input type="text" id="userName" placeholder="Ваше ім'я">
+            <span class="error" id="nameError"></span>
+        </div>
+        <div class="form-group">
+            <input type="email" id="userEmail" placeholder="Email">
+            <span class="error" id="emailError"></span>
+        </div>
+        <div class="form-group">
+            <textarea id="userMessage" placeholder="Ваше повідомлення"></textarea>
+            <span class="error" id="messageError"></span>
+        </div>
+        <button type="submit" id="submitBtn">Надіслати</button>
+    </form>
+    <div id="successMessage" class="hidden">Дякуємо! Ваше повідомлення надіслано.</div>
+</section>
+
+<script src="script.js"></script>
