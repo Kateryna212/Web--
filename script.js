@@ -1,61 +1,73 @@
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('contactForm');
     const successMsg = document.getElementById('successMessage');
-
-    // 1. Подія 'input' — валідація в реальному часі
     const emailInput = document.getElementById('userEmail');
+
+    // 1. Подія 'input' — Валідація Email в реальному часі
     emailInput.addEventListener('input', () => {
         const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailPattern.test(emailInput.value)) {
-            emailInput.classList.add('invalid');
-            document.getElementById('emailError').textContent = 'Невірний формат email';
+        const emailError = document.getElementById('emailError');
+        
+        if (emailInput.value !== "" && !emailPattern.test(emailInput.value)) {
+            emailError.textContent = "Невірний формат email (приклад: name@mail.com)";
+            emailInput.style.borderColor = "#e74c3c";
         } else {
-            emailInput.classList.remove('invalid');
-            document.getElementById('emailError').textContent = '';
+            emailError.textContent = "";
+            emailInput.style.borderColor = "#ddd";
         }
     });
 
-    // 2. Подія 'submit' — обробка форми
-    form.addEventListener('submit', (event) => {
-        event.preventDefault(); // Заборона перезавантаження сторінки
+    // 2. Подія 'submit' — Обробка відправки форми
+    form.addEventListener('submit', function(event) {
+        event.preventDefault(); // Сторінка не перезавантажується
+
+        const name = document.getElementById('userName').value.trim();
+        const email = emailInput.value.trim();
+        const message = document.getElementById('userMessage').value.trim();
+
+        // Очищення попередніх помилок
+        document.querySelectorAll('.error').forEach(el => el.textContent = '');
 
         let isValid = true;
-        const name = document.getElementById('userName').value;
-        const message = document.getElementById('userMessage').value;
 
-        // Перевірка заповненості
-        if (name.trim() === '') {
-            document.getElementById('nameError').textContent = "Ім'я обов'язкове";
+        // Валідація полів
+        if (name === "") {
+            document.getElementById('nameError').textContent = "Введіть ваше ім'я";
             isValid = false;
         }
-        if (message.trim() === '') {
-            document.getElementById('messageError').textContent = "Повідомлення не може бути порожнім";
+        if (email === "") {
+            document.getElementById('emailError').textContent = "Email обов'язковий";
+            isValid = false;
+        }
+        if (message === "") {
+            document.getElementById('messageError').textContent = "Напишіть нам щось";
             isValid = false;
         }
 
+        // Якщо все заповнено вірно
         if (isValid) {
-            // Динамічне оновлення DOM
+            // ПРИХОВУЄМО ФОРМУ
             form.classList.add('hidden');
+            
+            // ПОКАЗУЄМО ПОВІДОМЛЕННЯ ПРО УСПІХ
             successMsg.classList.remove('hidden');
 
-            // 3. Подія 'click' (динамічне додавання елемента)
-            console.log('Дані надіслано:', { name, email: emailInput.value, message });
+            console.log("Форма успішно оброблена:", { name, email, message });
         }
     });
 
-    // Приклад додавання нової картки товару через кнопку "В кошик"
-    const buyButtons = document.querySelectorAll('.buy-btn');
-    buyButtons.forEach(btn => {
-        btn.addEventListener('click', function() {
-            this.textContent = 'У кошику ✓';
-            this.style.backgroundColor = '#28a745';
-            this.style.color = '#fff';
+    // 3. Подія 'click' — Інтерактивність кнопок товарів
+    const buyBtn = document.querySelector('.buy-btn');
+    if (buyBtn) {
+        buyBtn.addEventListener('click', () => {
+            buyBtn.textContent = "У кошику ✓";
+            buyBtn.style.background = "#2ecc71";
+            buyBtn.style.color = "white";
             
-            // Створення нового елемента DOM
-            const notification = document.createElement('div');
-            notification.innerText = 'Товар додано!';
-            notification.style.cssText = 'position:fixed; bottom:20px; right:20px; background:#333; color:#fff; padding:10px;';
-            document.body.appendChild(notification);
+            alert("Товар додано до вашого кошика!");
+        });
+    }
+});
             
             setTimeout(() => notification.remove(), 2000);
         });
